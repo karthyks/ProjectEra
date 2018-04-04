@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package connectproto;
+
+option java_multiple_files = true;
+option java_package = "com.gihub.karthyks.project.era.proto.connect";
+option java_outer_classname = "ConnectProto";
+option objc_class_prefix = "CPrt";
+
+message ConnectRequest {
+    string name = 1;
+}
+
+message ConnectResponse {
+    string status = 1;
+}
+
+service Connect {
+   rpc initiate(ConnectRequest) returns(ConnectResponse);
+}
+
