@@ -1,0 +1,4 @@
+rootProject.name = 'ProjectEra'
+rootProject.name = 'ProjectEra'
+include 'GrpcServer'
+
