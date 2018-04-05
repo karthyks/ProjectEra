@@ -32,8 +32,7 @@ public class HookService extends HookGrpc.HookImplBase {
 
       @Override
       public void onCompleted() {
-        HookResponse hookResponse = HookResponse.newBuilder().setStatus("Hooked").build();
-        responseObserver.onNext(hookResponse);
+        responseObserver.onCompleted();
         observers.remove(responseObserver);
       }
     };

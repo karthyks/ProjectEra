@@ -2,6 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="GrpcClient_main" target="1.8" />
+      <module name="GrpcClient_test" target="1.8" />
       <module name="GrpcServer_main" target="1.8" />
       <module name="GrpcServer_test" target="1.8" />
       <module name="ProjectEra_main" target="1.8" />

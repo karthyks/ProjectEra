@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/GrpcClient" />
             <option value="$PROJECT_DIR$/GrpcServer" />
           </set>
         </option>
