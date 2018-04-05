@@ -10,6 +10,7 @@ import java.util.List;
 
 public class HookService extends HookGrpc.HookImplBase {
   private static final List<StreamObserver> observers = new LinkedList<>();
+  private static final List<String> clientNames = new LinkedList<>();
 
   public HookService() {
     System.out.println("Ready to be hooked!");
@@ -20,13 +21,18 @@ public class HookService extends HookGrpc.HookImplBase {
     return new StreamObserver<HookRequest>() {
       @Override
       public void onNext(HookRequest value) {
-        if (!observers.contains(responseObserver))
+        if (!observers.contains(responseObserver)) {
           observers.add(responseObserver);
-        System.out.println("Request value " + value.getName());
+          clientNames.add(value.getName());
+          System.out.println(value.getName() + " has connected!");
+        }
+        System.out.println("Packets received from : " + value.getName());
       }
 
       @Override
       public void onError(Throwable t) {
+        System.out.println(clientNames.get(observers.indexOf(responseObserver)) + " disconnected!");
+        clientNames.remove(clientNames.get(observers.indexOf(responseObserver)));
         observers.remove(responseObserver);
       }
 
