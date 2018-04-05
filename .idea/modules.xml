@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer.iml" group="GrpcServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_main.iml" group="GrpcServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_test.iml" group="GrpcServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra_main.iml" group="ProjectEra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra_test.iml" group="ProjectEra" />
+    </modules>
+  </component>
+</project>
