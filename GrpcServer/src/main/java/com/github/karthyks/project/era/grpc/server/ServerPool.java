@@ -1,8 +1,12 @@
 package com.github.karthyks.project.era.grpc.server;
 
+import com.github.karthyks.project.era.grpc.server.interceptors.JwtServerInterceptor;
+import com.github.karthyks.project.era.grpc.server.interceptors.TraceIdServerInterceptor;
 import com.github.karthyks.project.era.grpc.server.services.HookService;
+import com.github.karthyks.project.era.grpc.server.services.PeerListener;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.ServerInterceptors;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -12,8 +16,11 @@ public class ServerPool {
   private Server server;
 
   private void start(int port) throws IOException {
+    JwtServerInterceptor jwtInterceptor = new JwtServerInterceptor(Constant.JWT_SECRET,
+        new PeerListener());
     server = ServerBuilder.forPort(port)
-        .addService(new HookService())
+        .addService(ServerInterceptors.intercept(new HookService(), jwtInterceptor,
+            new TraceIdServerInterceptor()))
         .build()
         .start();
     logger.info("Server started, listening on " + port);

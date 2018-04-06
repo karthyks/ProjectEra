@@ -3,6 +3,12 @@ package com.github.karthyks.project.era.grpc.client;
 import com.gihub.karthyks.project.era.proto.hook.HookGrpc;
 import com.gihub.karthyks.project.era.proto.hook.HookRequest;
 import com.gihub.karthyks.project.era.proto.hook.HookResponse;
+import com.github.karthyks.project.era.grpc.client.auth.Constant;
+import com.github.karthyks.project.era.grpc.client.auth.JwtCallCredential;
+import com.github.karthyks.project.era.grpc.client.auth.JwtCreator;
+import com.github.karthyks.project.era.grpc.client.services.HookRequestService;
+import io.grpc.CallOptions;
+import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -14,59 +20,60 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
-  private static final String CLIENT_NAME = System.getProperty("user.name");
+  public static final String CLIENT_NAME = System.getProperty("user.name");
 
   private static ManagedChannel channel;
   private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-  private static final BlockingQueue<Runnable> hookQueue = new LinkedBlockingQueue<>();
+  public static final BlockingQueue<Runnable> hookQueue = new LinkedBlockingQueue<>();
 
   public static void main(String[] args) {
+    String jwt = JwtCreator.create("auth0", CLIENT_NAME);
+    System.out.println("JWT " + jwt);
+    JwtCallCredential jwtCallCredential = new JwtCallCredential(jwt);
+
     channel = ManagedChannelBuilder.forAddress("localhost", 8086)
         .usePlaintext()
         .build();
-    hookToServer();
+    hookToServer(jwtCallCredential);
   }
 
-  private static void hookToServer() {
-    HookGrpc.HookStub asyncStub = HookGrpc.newStub(channel);
-    StreamObserver<HookResponse> responseStreamObserver = new StreamObserver<HookResponse>() {
-      @Override
-      public void onNext(HookResponse value) {
-        System.out.println("On Next " + value.getStatus());
-      }
+  private static void hookToServer(final JwtCallCredential jwtCallCredential) {
+    Context.current().withValue(Constant.TRACE_ID_CTX_KEY, "1")
+        .run(() -> {
+          HookGrpc.HookStub asyncStub = HookGrpc.newStub(channel)
+              .withCallCredentials(jwtCallCredential)
+              .withOption(CallOptions.Key.of("client", CLIENT_NAME), CLIENT_NAME);
+          StreamObserver<HookResponse> responseStreamObserver = new StreamObserver<HookResponse>() {
+            @Override
+            public void onNext(HookResponse value) {
+              System.out.println("On Next " + value.getStatus());
+            }
 
-      @Override
-      public void onError(Throwable t) {
-        System.out.println("Error " + t.toString());
-        new Thread(() -> {
-          try {
-            Thread.sleep(500);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          hookQueue.add(Client::hookToServer);
-        }).start();
-      }
+            @Override
+            public void onError(Throwable t) {
+              System.out.println("Error " + t.toString());
+              new Thread(() -> {
+                try {
+                  Thread.sleep(500);
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
+                }
+                hookQueue.add(() -> {
+                  hookToServer(jwtCallCredential);
+                });
+              }).start();
+            }
 
-      @Override
-      public void onCompleted() {
-        System.out.println("Completed");
-      }
-    };
+            @Override
+            public void onCompleted() {
+              System.out.println("Completed");
+            }
+          };
 
-    final StreamObserver<HookRequest> requestStreamObserver = asyncStub
-        .initiate(responseStreamObserver);
+          StreamObserver<HookRequest> requestStreamObserver = asyncStub.initiate(responseStreamObserver);
 
-    scheduler.scheduleAtFixedRate(() -> {
-      HookRequest hookRequest = HookRequest.newBuilder().setName(CLIENT_NAME).build();
-      requestStreamObserver.onNext(hookRequest);
-      if (hookQueue.size() > 0) {
-        try {
-          hookQueue.take().run();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    }, 0, 10, TimeUnit.SECONDS);
+          scheduler.scheduleAtFixedRate(new HookRequestService(requestStreamObserver),
+              0, 10, TimeUnit.SECONDS);
+        });
   }
 }
