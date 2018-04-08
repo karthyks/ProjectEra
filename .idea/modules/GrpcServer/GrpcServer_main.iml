@@ -3,18 +3,13 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../../GrpcServer/out/production/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../GrpcServer/build/generated/source/proto/main/grpc">
-      <sourceFolder url="file://$MODULE_DIR$/../../../GrpcServer/build/generated/source/proto/main/grpc" isTestSource="false" />
-    </content>
-    <content url="file://$MODULE_DIR$/../../../GrpcServer/build/generated/source/proto/main/java">
-      <sourceFolder url="file://$MODULE_DIR$/../../../GrpcServer/build/generated/source/proto/main/java" isTestSource="false" />
-    </content>
     <content url="file://$MODULE_DIR$/../../../GrpcServer/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../GrpcServer/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../GrpcServer/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Network_main" />
     <orderEntry type="library" name="Gradle: io.grpc:grpc-alts:1.11.0" level="project" />
     <orderEntry type="library" name="Gradle: io.grpc:grpc-protobuf:1.11.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.api.grpc:proto-google-common-protos:1.0.0" level="project" />

@@ -10,6 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="GrpcClient_main" />
+    <orderEntry type="module" module-name="Network_main" />
     <orderEntry type="library" name="Gradle: io.grpc:grpc-alts:1.11.0" level="project" />
     <orderEntry type="library" name="Gradle: io.grpc:grpc-protobuf:1.11.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.api.grpc:proto-google-common-protos:1.0.0" level="project" />

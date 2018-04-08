@@ -1,12 +1,12 @@
 package com.github.karthyks.project.era.grpc.client;
 
-import com.gihub.karthyks.project.era.proto.hook.HookGrpc;
-import com.gihub.karthyks.project.era.proto.hook.HookRequest;
-import com.gihub.karthyks.project.era.proto.hook.HookResponse;
-import com.github.karthyks.project.era.grpc.client.auth.Constant;
 import com.github.karthyks.project.era.grpc.client.auth.JwtCallCredential;
-import com.github.karthyks.project.era.grpc.client.auth.JwtCreator;
 import com.github.karthyks.project.era.grpc.client.services.HookRequestService;
+import com.github.karthyks.project.era.network.Constant;
+import com.github.karthyks.project.era.network.auth.JwtCreator;
+import com.github.karthyks.project.era.proto.hook.HookGrpc;
+import com.github.karthyks.project.era.proto.hook.HookRequest;
+import com.github.karthyks.project.era.proto.hook.HookResponse;
 import io.grpc.CallOptions;
 import io.grpc.Context;
 import io.grpc.ManagedChannel;
@@ -27,7 +27,7 @@ public class Client {
   public static final BlockingQueue<Runnable> hookQueue = new LinkedBlockingQueue<>();
 
   public static void main(String[] args) {
-    String jwt = JwtCreator.create("auth0", CLIENT_NAME);
+    String jwt = JwtCreator.create(Constant.ISSUER, CLIENT_NAME);
     System.out.println("JWT " + jwt);
     JwtCallCredential jwtCallCredential = new JwtCallCredential(jwt);
 
@@ -59,7 +59,8 @@ public class Client {
                   e.printStackTrace();
                 }
                 hookQueue.add(() -> {
-                  hookToServer(jwtCallCredential);
+                  hookToServer(new JwtCallCredential(JwtCreator.create(Constant.ISSUER,
+                      CLIENT_NAME)));
                 });
               }).start();
             }
@@ -70,7 +71,8 @@ public class Client {
             }
           };
 
-          StreamObserver<HookRequest> requestStreamObserver = asyncStub.initiate(responseStreamObserver);
+          StreamObserver<HookRequest> requestStreamObserver = asyncStub
+              .initiate(responseStreamObserver);
 
           scheduler.scheduleAtFixedRate(new HookRequestService(requestStreamObserver),
               0, 10, TimeUnit.SECONDS);

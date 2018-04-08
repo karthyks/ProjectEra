@@ -6,8 +6,12 @@
       <module name="GrpcClient_test" target="1.8" />
       <module name="GrpcServer_main" target="1.8" />
       <module name="GrpcServer_test" target="1.8" />
+      <module name="Network_main" target="1.8" />
+      <module name="Network_test" target="1.8" />
       <module name="ProjectEra_main" target="1.8" />
       <module name="ProjectEra_test" target="1.8" />
+      <module name="Proto_main" target="1.8" />
+      <module name="Proto_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -4,6 +4,7 @@ import com.github.karthyks.project.era.grpc.server.interceptors.JwtServerInterce
 import com.github.karthyks.project.era.grpc.server.interceptors.TraceIdServerInterceptor;
 import com.github.karthyks.project.era.grpc.server.services.HookService;
 import com.github.karthyks.project.era.grpc.server.services.PeerListener;
+import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerInterceptors;
@@ -53,7 +54,7 @@ public class ServerPool {
   public static void main(String[] args) throws IOException, InterruptedException {
     final ServerPool server = new ServerPool();
     if (args == null || args.length <= 0) {
-      server.start(50051);
+      server.start(8086);
     } else {
       server.start(Integer.parseInt(args[0]));
     }
