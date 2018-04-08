@@ -9,6 +9,8 @@ public class Constant {
   public static final String JWT_SECRET = "nqOIjvhDQCsehmG1tbfMzFBLqdo=";
   public static final String ISSUER = "auth0";
   public static final Context.Key<String> USER_ID_CTX_KEY = Context.key("userId");
+  public static final Context.Key<String> SCOPE = Context.key("scope");
+  public static final Context.Key<String> REMOTE_ADDRESS = Context.key("remote_address");
   public static final Context.Key<String> JWT_CTX_KEY = Context.key("jwt");
   public static final Context.Key<String> TRACE_ID_CTX_KEY = Context.key("traceId");
   public static final Context.Key<String> CLIENT_ID_KEY = Context.key("clientId");

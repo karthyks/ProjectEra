@@ -4,8 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
-import com.github.karthyks.project.era.grpc.server.services.IPeerListener;
 import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Context;
 import io.grpc.Contexts;
@@ -18,16 +16,16 @@ import io.grpc.Status;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.github.karthyks.project.era.grpc.server.ServerPool.observersMap;
+
 public class JwtServerInterceptor implements ServerInterceptor {
 
   private static final ServerCall.Listener NOOP_LISTENER = new ServerCall.Listener() {
   };
 
   private final JWTVerifier verifier;
-  private IPeerListener listener;
 
-  public JwtServerInterceptor(String secret, IPeerListener listener) {
-    this.listener = listener;
+  public JwtServerInterceptor(String secret) {
     Algorithm algorithm;
     JWTVerifier verifier;
     try {
@@ -51,9 +49,6 @@ public class JwtServerInterceptor implements ServerInterceptor {
     Context ctx;
     try {
       DecodedJWT verified = verifier.verify(jwt);
-      ctx = Context.current().withValue(Constant.USER_ID_CTX_KEY, verified.getToken())
-          .withValue(Constant.JWT_CTX_KEY, jwt);
-      PeerInfo peerInfo = new PeerInfo();
       String address = call.getAttributes().get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR).toString();
       try {
         address = address.substring(1);
@@ -63,9 +58,14 @@ public class JwtServerInterceptor implements ServerInterceptor {
         call.close(Status.UNAUTHENTICATED.withDescription(e.getMessage()).withCause(e), headers);
         return NOOP_LISTENER;
       }
-      peerInfo.address = address;
-      peerInfo.clientName = headers.get(Constant.CLIENT_ID_MD_KEY);
-      listener.onConnected(peerInfo);
+      if (observersMap.containsKey(address)) {
+        call.close(Status.ALREADY_EXISTS.withDescription("Another hook detected from the same "
+            + "address"), headers);
+        return NOOP_LISTENER;
+      }
+      ctx = Context.current().withValue(Constant.USER_ID_CTX_KEY, verified.getToken())
+          .withValue(Constant.JWT_CTX_KEY, jwt)
+          .withValue(Constant.REMOTE_ADDRESS, address);
     } catch (Exception e) {
       System.out.println("Verification failed - Unauthenticated");
       call.close(Status.UNAUTHENTICATED.withDescription(e.getMessage()).withCause(e), headers);
