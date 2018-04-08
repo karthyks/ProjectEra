@@ -1,5 +1,5 @@
 rootProject.name = 'ProjectEra'
-include 'GrpcServer'
-include 'GrpcClient'
+include 'ServerPool'
+include 'SubServer'
 include 'Network'
 

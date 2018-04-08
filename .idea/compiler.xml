@@ -12,6 +12,8 @@
       <module name="ProjectEra_test" target="1.8" />
       <module name="Proto_main" target="1.8" />
       <module name="Proto_test" target="1.8" />
+      <module name="ServerPool_main" target="1.8" />
+      <module name="ServerPool_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

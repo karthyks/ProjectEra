@@ -2,21 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcClient.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcClient.iml" group="GrpcClient" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcClient/GrpcClient_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcClient/GrpcClient_main.iml" group="GrpcClient" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcClient/GrpcClient_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcClient/GrpcClient_test.iml" group="GrpcClient" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer.iml" group="GrpcServer" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_main.iml" group="GrpcServer" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GrpcServer/GrpcServer_test.iml" group="GrpcServer" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network.iml" group="Network" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network.iml" group="Network" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network_main.iml" group="Network" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network_main.iml" group="Network" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network_test.iml" group="Network" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Network/Network_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Network/Network_test.iml" group="Network" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra_main.iml" group="ProjectEra" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectEra_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectEra_test.iml" group="ProjectEra" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool.iml" group="ServerPool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool_main.iml" group="ServerPool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerPool/ServerPool_test.iml" group="ServerPool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SubServer.iml" filepath="$PROJECT_DIR$/.idea/modules/SubServer.iml" group="GrpcClient" />
     </modules>
   </component>
 </project>
