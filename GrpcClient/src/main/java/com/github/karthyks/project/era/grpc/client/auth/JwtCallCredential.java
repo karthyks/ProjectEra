@@ -1,6 +1,7 @@
 package com.github.karthyks.project.era.grpc.client.auth;
 
 import com.github.karthyks.project.era.grpc.client.Client;
+import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Attributes;
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;

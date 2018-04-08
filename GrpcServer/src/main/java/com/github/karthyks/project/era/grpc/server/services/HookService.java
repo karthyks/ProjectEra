@@ -1,8 +1,9 @@
 package com.github.karthyks.project.era.grpc.server.services;
 
-import com.gihub.karthyks.project.era.proto.hook.HookGrpc;
-import com.gihub.karthyks.project.era.proto.hook.HookRequest;
-import com.gihub.karthyks.project.era.proto.hook.HookResponse;
+
+import com.github.karthyks.project.era.proto.hook.HookGrpc;
+import com.github.karthyks.project.era.proto.hook.HookRequest;
+import com.github.karthyks.project.era.proto.hook.HookResponse;
 import io.grpc.stub.StreamObserver;
 
 import java.util.LinkedList;

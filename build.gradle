@@ -21,18 +21,23 @@ buildscript {
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.5.1-1"
-    }
-    plugins {
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.11.0'
-        }
-    }
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
+ext {
+    grpcVersion = '1.11.0' // CURRENT_GRPC_VERSION
+    nettyTcNativeVersion = '2.0.7.Final'
 }
+
+ext.libraries = [
+        proto      : 'com.google.api.grpc:proto-google-common-protos:1.0.0',
+        alts       : 'io.grpc:grpc-alts:' + grpcVersion,
+        netty      : 'io.grpc:grpc-netty:' + grpcVersion,
+        protobuf   : 'io.grpc:grpc-protobuf:' + grpcVersion,
+        stub       : 'io.grpc:grpc-stub:' + grpcVersion,
+        annotation : 'javax.annotation:javax.annotation-api:1.2',
+        jwt        : 'com.auth0:java-jwt:3.1.0',
+
+        ssl        : 'io.netty:netty-tcnative-boringssl-static:' + nettyTcNativeVersion,
+
+        grpctesting: 'io.grpc:grpc-testing:' + grpcVersion,
+        junit      : 'junit:junit:4.12',
+        mockito    : 'org.mockito:mockito-core:1.9.5'
+]

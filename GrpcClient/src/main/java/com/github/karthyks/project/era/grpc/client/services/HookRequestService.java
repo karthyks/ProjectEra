@@ -1,7 +1,7 @@
 package com.github.karthyks.project.era.grpc.client.services;
 
-import com.gihub.karthyks.project.era.proto.hook.HookRequest;
 import com.github.karthyks.project.era.grpc.client.Client;
+import com.github.karthyks.project.era.proto.hook.HookRequest;
 import io.grpc.stub.StreamObserver;
 
 public class HookRequestService implements Runnable {

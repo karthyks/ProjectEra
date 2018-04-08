@@ -2,7 +2,6 @@ group 'com.github.karthyks.project.era'
 version '1.0-PreAlpha'
 
 apply plugin: 'java'
-apply plugin: 'com.google.protobuf'
 
 sourceCompatibility = 1.8
 
@@ -14,47 +13,22 @@ repositories {
     mavenLocal()
 }
 
-def grpcVersion = '1.11.0' // CURRENT_GRPC_VERSION
-def nettyTcNativeVersion = '2.0.7.Final'
-
 dependencies {
-    compile "com.google.api.grpc:proto-google-common-protos:1.0.0"
-    compile "io.grpc:grpc-alts:${grpcVersion}"
-    compile "io.grpc:grpc-netty:${grpcVersion}"
-    compile "io.grpc:grpc-protobuf:${grpcVersion}"
-    compile "io.grpc:grpc-stub:${grpcVersion}"
-    compileOnly "javax.annotation:javax.annotation-api:1.2"
-    compile group: 'com.auth0', name: 'java-jwt', version: '3.1.0'
+    compile project(':Network')
+    compile libraries.proto
+    compile libraries.alts
+    compile libraries.netty
+    compile libraries.protobuf
+    compile libraries.stub
+    compileOnly libraries.annotation
+    compile libraries.jwt
 
-    compile "io.netty:netty-tcnative-boringssl-static:${nettyTcNativeVersion}"
+    compile libraries.ssl
 
-    testCompile "io.grpc:grpc-testing:${grpcVersion}"
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile libraries.grpctesting
+    testCompile libraries.junit
+    testCompile libraries.mockito
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs 'build/generated/source/proto/main/grpc'
-            srcDirs 'build/generated/source/proto/main/java'
-        }
-    }
-}
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.5.1-1"
-    }
-    plugins {
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.11.0'
-        }
-    }
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
-}
 
