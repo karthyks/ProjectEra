@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
 import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Context;
 import io.grpc.Contexts;
@@ -58,7 +59,9 @@ public class JwtServerInterceptor implements ServerInterceptor {
         call.close(Status.UNAUTHENTICATED.withDescription(e.getMessage()).withCause(e), headers);
         return NOOP_LISTENER;
       }
-      if (observersMap.containsKey(address)) {
+      PeerInfo peerInfo = new PeerInfo();
+      peerInfo.address = address;
+      if (observersMap.containsKey(peerInfo)) {
         call.close(Status.ALREADY_EXISTS.withDescription("Another hook detected from the same "
             + "address"), headers);
         return NOOP_LISTENER;

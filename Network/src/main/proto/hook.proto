@@ -9,6 +9,7 @@ option objc_class_prefix = "HP";
 
 message HookRequest {
     string name = 1;
+    bool isFcmAvailable = 2;
 }
 
 message HookResponse {

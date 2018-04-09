@@ -38,11 +38,10 @@ public class SubServer {
   }
 
   private static void hookToServer(final JwtCallCredential jwtCallCredential) {
-    Context.current().withValue(Constant.TRACE_ID_CTX_KEY, "1")
+    Context.current().withValue(Constant.TRACE_ID_CTX_KEY, CLIENT_NAME)
         .run(() -> {
           HookGrpc.HookStub asyncStub = HookGrpc.newStub(channel)
-              .withCallCredentials(jwtCallCredential)
-              .withOption(CallOptions.Key.of("client", CLIENT_NAME), CLIENT_NAME);
+              .withCallCredentials(jwtCallCredential);
           StreamObserver<HookResponse> responseStreamObserver = new StreamObserver<HookResponse>() {
             @Override
             public void onNext(HookResponse value) {

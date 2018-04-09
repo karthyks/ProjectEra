@@ -2,6 +2,7 @@ package com.github.karthyks.project.era.grpc.server;
 
 import com.github.karthyks.project.era.grpc.server.interceptors.JwtServerInterceptor;
 import com.github.karthyks.project.era.grpc.server.interceptors.TraceIdServerInterceptor;
+import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
 import com.github.karthyks.project.era.grpc.server.services.HookService;
 import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Server;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 
 public class ServerPool {
   private static final Logger logger = Logger.getLogger(ServerPool.class.getName());
-  public static final Map<String, StreamObserver> observersMap = new LinkedHashMap<>();
+  public static final Map<PeerInfo, StreamObserver> observersMap = new LinkedHashMap<>();
   private Server server;
 
   private void start(int port) throws IOException {
