@@ -14,19 +14,16 @@ repositories {
 }
 
 dependencies {
-    compile project(':Network')
-    compile project(':ServerHook')
-    compile libraries.proto
-    compile libraries.alts
-    compile libraries.netty
-    compile libraries.protobuf
-    compile libraries.stub
+    compileOnly project(':Network')
+    compileOnly libraries.proto
+    compileOnly libraries.alts
+    compileOnly libraries.netty
+    compileOnly libraries.stub
     compileOnly libraries.annotation
-    compile libraries.jwt
+    compileOnly libraries.jwt
+    compileOnly libraries.ssl
 
-    compile libraries.ssl
-
-    testCompile libraries.grpctesting
-    testCompile libraries.junit
-    testCompile libraries.mockito
+    testCompileOnly libraries.grpctesting
+    testCompileOnly libraries.junit
+    testCompileOnly libraries.mockito
 }

@@ -1,11 +1,11 @@
-package com.github.karthyks.project.era.grpc.server.interceptors;
+package com.github.karthyks.project.era.network.interceptors;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
 import com.github.karthyks.project.era.network.Constant;
+import com.github.karthyks.project.era.network.model.PeerInfo;
 import io.grpc.Context;
 import io.grpc.Contexts;
 import io.grpc.Grpc;
@@ -17,7 +17,7 @@ import io.grpc.Status;
 
 import java.io.UnsupportedEncodingException;
 
-import static com.github.karthyks.project.era.grpc.server.ServerPool.observersMap;
+import static com.github.karthyks.project.era.network.GrpcServer.peersMap;
 
 public class JwtServerInterceptor implements ServerInterceptor {
 
@@ -61,7 +61,7 @@ public class JwtServerInterceptor implements ServerInterceptor {
       }
       PeerInfo peerInfo = new PeerInfo();
       peerInfo.address = address;
-      if (observersMap.containsKey(peerInfo)) {
+      if (peersMap.containsKey(peerInfo)) {
         call.close(Status.ALREADY_EXISTS.withDescription("Another hook detected from the same "
             + "address"), headers);
         return NOOP_LISTENER;

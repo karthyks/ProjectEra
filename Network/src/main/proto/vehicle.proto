@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package vehicle;
+
+option java_multiple_files = true;
+option java_package = "com.github.karthyks.project.era.proto.vehicle";
+option java_outer_classname = "Vehicle";
+option objc_class_prefix = "VCL";
+
+
+
+message VehicleInfoRequest {
+    string vehicleId = 1;
+}
+
+message VehicleInfoResponse {
+    string vehicleId = 1;
+    string cabCode = 2;
+    string registrationNumber = 3;
+    string vehicleType  = 4;
+}
+
+message VehicleLocation {
+    string vehicleId = 1;
+    double latitude = 2;
+    double longitude = 3;
+    string address = 4;
+    int64 time = 5;
+}
+
+message VehicleHistory {
+    string vehicleId = 1;
+    int64 startTime = 2;
+    int64 endTime = 3;
+}
+
+message TrackingRequest {
+    string vehicleId = 1;
+}
+
+message TrackingResponse {
+    repeated VehicleLocation vehicleLocations = 1;
+}
+
+service FetchVehicleInfo{
+    rpc getVehicleInfo(VehicleInfoRequest) returns(VehicleInfoResponse);
+}
+
+service FetchVehicleLocation {
+    rpc trackVehicle(stream TrackingRequest) returns(stream TrackingResponse);
+    rpc getLocationHistory(TrackingRequest) returns(TrackingResponse);
+}

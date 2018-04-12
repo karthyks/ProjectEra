@@ -1,4 +1,4 @@
-package com.github.karthyks.project.era.grpc.server.model;
+package com.github.karthyks.project.era.network.model;
 
 public class PeerInfo {
   public String name;

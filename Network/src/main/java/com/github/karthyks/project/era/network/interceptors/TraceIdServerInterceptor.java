@@ -1,4 +1,4 @@
-package com.github.karthyks.project.era.grpc.server.interceptors;
+package com.github.karthyks.project.era.network.interceptors;
 
 import com.github.karthyks.project.era.network.Constant;
 import io.grpc.Context;

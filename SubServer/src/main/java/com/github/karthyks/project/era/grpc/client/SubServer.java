@@ -1,80 +1,28 @@
 package com.github.karthyks.project.era.grpc.client;
 
-import com.github.karthyks.project.era.grpc.client.auth.JwtCallCredential;
-import com.github.karthyks.project.era.grpc.client.services.HookRequestService;
 import com.github.karthyks.project.era.network.Constant;
-import com.github.karthyks.project.era.network.auth.JwtCreator;
-import com.github.karthyks.project.era.proto.hook.HookGrpc;
-import com.github.karthyks.project.era.proto.hook.HookRequest;
-import com.github.karthyks.project.era.proto.hook.HookResponse;
-import io.grpc.CallOptions;
-import io.grpc.Context;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
+import com.github.karthyks.project.era.network.GrpcServer;
+import com.github.karthyks.project.era.network.interceptors.JwtServerInterceptor;
+import com.github.karthyks.project.era.network.interceptors.TraceIdServerInterceptor;
+import com.github.karthyks.project.era.network.services.HookService;
+import com.github.karthyks.project.era.serverhook.ServerHook;
+import io.grpc.ServerInterceptors;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public class SubServer {
+public class SubServer extends GrpcServer {
   public static final String CLIENT_NAME = System.getProperty("user.name");
 
-  private static ManagedChannel channel;
-  private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-  public static final BlockingQueue<Runnable> hookQueue = new LinkedBlockingQueue<>();
-
-  public static void main(String[] args) {
-    String jwt = JwtCreator.create(Constant.ISSUER, CLIENT_NAME);
-    System.out.println("JWT " + jwt);
-    JwtCallCredential jwtCallCredential = new JwtCallCredential(jwt);
-
-    channel = ManagedChannelBuilder.forAddress("localhost", 8086)
-        .usePlaintext()
-        .build();
-    hookToServer(jwtCallCredential);
+  private SubServer() {
+    super(8087);
   }
 
-  private static void hookToServer(final JwtCallCredential jwtCallCredential) {
-    Context.current().withValue(Constant.TRACE_ID_CTX_KEY, CLIENT_NAME)
-        .run(() -> {
-          HookGrpc.HookStub asyncStub = HookGrpc.newStub(channel)
-              .withCallCredentials(jwtCallCredential);
-          StreamObserver<HookResponse> responseStreamObserver = new StreamObserver<HookResponse>() {
-            @Override
-            public void onNext(HookResponse value) {
-              System.out.println("On Next " + value.getStatus());
-            }
+  public static void main(String[] args) {
+    ServerHook serverHook = new ServerHook("localhost", 8086, CLIENT_NAME);
+    serverHook.hookToServer();
 
-            @Override
-            public void onError(Throwable t) {
-              System.out.println("Error " + t.toString());
-              new Thread(() -> {
-                try {
-                  Thread.sleep(500);
-                } catch (InterruptedException e) {
-                  e.printStackTrace();
-                }
-                hookQueue.add(() -> {
-                  hookToServer(new JwtCallCredential(JwtCreator.create(Constant.ISSUER,
-                      CLIENT_NAME)));
-                });
-              }).start();
-            }
-
-            @Override
-            public void onCompleted() {
-              System.out.println("Completed");
-            }
-          };
-
-          StreamObserver<HookRequest> requestStreamObserver = asyncStub
-              .initiate(responseStreamObserver);
-
-          scheduler.scheduleAtFixedRate(new HookRequestService(requestStreamObserver),
-              0, 10, TimeUnit.SECONDS);
-        });
+    final SubServer subServer = new SubServer();
+    JwtServerInterceptor jwtInterceptor = new JwtServerInterceptor(Constant.JWT_SECRET);
+    subServer.withServices(ServerInterceptors.intercept(new HookService(), jwtInterceptor,
+        new TraceIdServerInterceptor()));
+    subServer.buildServer().startServer();
   }
 }

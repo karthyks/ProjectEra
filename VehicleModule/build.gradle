@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':Network')
     compile project(':ServerHook')
+    compile project(':Network')
     compile libraries.proto
     compile libraries.alts
     compile libraries.netty

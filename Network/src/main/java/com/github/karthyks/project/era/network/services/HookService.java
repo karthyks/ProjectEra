@@ -1,14 +1,13 @@
-package com.github.karthyks.project.era.grpc.server.services;
+package com.github.karthyks.project.era.network.services;
 
-
-import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
 import com.github.karthyks.project.era.network.Constant;
+import com.github.karthyks.project.era.network.model.PeerInfo;
 import com.github.karthyks.project.era.proto.hook.HookGrpc;
 import com.github.karthyks.project.era.proto.hook.HookRequest;
 import com.github.karthyks.project.era.proto.hook.HookResponse;
 import io.grpc.stub.StreamObserver;
 
-import static com.github.karthyks.project.era.grpc.server.ServerPool.observersMap;
+import static com.github.karthyks.project.era.network.GrpcServer.peersMap;
 
 public class HookService extends HookGrpc.HookImplBase {
 
@@ -24,8 +23,11 @@ public class HookService extends HookGrpc.HookImplBase {
         PeerInfo peerInfo = new PeerInfo();
         peerInfo.address = Constant.REMOTE_ADDRESS.get();
         peerInfo.name = value.getName();
-        observersMap.put(peerInfo, responseObserver);
+        peersMap.put(peerInfo, responseObserver);
         System.out.println("Received from " + peerInfo.name);
+        System.out.println("With Load " + value.getSystemLoad());
+        System.out.println("Free Memory " + value.getFreeMemory());
+        System.out.println("Max Memory " + value.getMaxMemory());
       }
 
       @Override
@@ -33,16 +35,17 @@ public class HookService extends HookGrpc.HookImplBase {
         PeerInfo peerInfo = new PeerInfo();
         peerInfo.address = Constant.REMOTE_ADDRESS.get();
         System.out.println("Hook disconnected from " + peerInfo.address);
-        observersMap.remove(peerInfo);
+        peersMap.remove(peerInfo);
       }
 
       @Override
       public void onCompleted() {
         PeerInfo peerInfo = new PeerInfo();
         peerInfo.address = Constant.REMOTE_ADDRESS.get();
-        observersMap.remove(peerInfo);
+        peersMap.remove(peerInfo);
         responseObserver.onCompleted();
       }
     };
   }
 }
+

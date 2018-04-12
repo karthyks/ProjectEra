@@ -1,66 +1,30 @@
 package com.github.karthyks.project.era.grpc.server;
 
-import com.github.karthyks.project.era.grpc.server.interceptors.JwtServerInterceptor;
-import com.github.karthyks.project.era.grpc.server.interceptors.TraceIdServerInterceptor;
-import com.github.karthyks.project.era.grpc.server.model.PeerInfo;
-import com.github.karthyks.project.era.grpc.server.services.HookService;
 import com.github.karthyks.project.era.network.Constant;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
+import com.github.karthyks.project.era.network.GrpcServer;
+import com.github.karthyks.project.era.network.interceptors.JwtServerInterceptor;
+import com.github.karthyks.project.era.network.interceptors.TraceIdServerInterceptor;
+import com.github.karthyks.project.era.network.services.HookService;
 import io.grpc.ServerInterceptors;
-import io.grpc.stub.StreamObserver;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Logger;
+public class ServerPool extends GrpcServer {
 
-public class ServerPool {
-  private static final Logger logger = Logger.getLogger(ServerPool.class.getName());
-  public static final Map<PeerInfo, StreamObserver> observersMap = new LinkedHashMap<>();
-  private Server server;
-
-  private void start(int port) throws IOException {
-    JwtServerInterceptor jwtInterceptor = new JwtServerInterceptor(Constant.JWT_SECRET);
-    server = ServerBuilder.forPort(port)
-        .addService(ServerInterceptors.intercept(new HookService(), jwtInterceptor,
-            new TraceIdServerInterceptor()))
-        .build()
-        .start();
-    logger.info("Server started, listening on " + port);
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      // Use stderr here since the logger may have been reset by its JVM shutdown hook.
-      System.err.println("*** shutting down gRPC server since JVM is shutting down");
-      ServerPool.this.stop();
-      System.err.println("*** server shut down");
-    }));
-  }
-
-  private void stop() {
-    if (server != null) {
-      server.shutdown();
-    }
-  }
-
-  /**
-   * Await termination on the main thread since the grpc library uses daemon threads.
-   */
-  private void blockUntilShutdown() throws InterruptedException {
-    if (server != null) {
-      server.awaitTermination();
-    }
+  private ServerPool(int port) {
+    super(port);
   }
 
   /**
    * Main launches the server from the command line.
    */
-  public static void main(String[] args) throws IOException, InterruptedException {
-    final ServerPool server = new ServerPool();
-    if (args == null || args.length <= 0) {
-      server.start(8086);
-    } else {
-      server.start(Integer.parseInt(args[0]));
+  public static void main(String[] args) {
+    int port = 8086;
+    if (args != null && args.length > 0) {
+      port = Integer.parseInt(args[0]);
     }
-    server.blockUntilShutdown();
+    JwtServerInterceptor jwtInterceptor = new JwtServerInterceptor(Constant.JWT_SECRET);
+    final ServerPool serverPool = new ServerPool(port);
+    serverPool.withServices(ServerInterceptors.intercept(new HookService(), jwtInterceptor,
+        new TraceIdServerInterceptor()));
+    serverPool.buildServer().startServer();
   }
 }
