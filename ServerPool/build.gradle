@@ -15,13 +15,9 @@ repositories {
 
 dependencies {
     compile project(':Network')
-    compile libraries.proto
     compile libraries.alts
     compile libraries.netty
-    compile libraries.protobuf
-    compile libraries.stub
     compileOnly libraries.annotation
-    compile libraries.jwt
 
     compile libraries.ssl
 

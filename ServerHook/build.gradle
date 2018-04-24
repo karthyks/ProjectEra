@@ -15,12 +15,9 @@ repositories {
 
 dependencies {
     compileOnly project(':Network')
-    compileOnly libraries.proto
     compileOnly libraries.alts
     compileOnly libraries.netty
-    compileOnly libraries.stub
     compileOnly libraries.annotation
-    compileOnly libraries.jwt
     compileOnly libraries.ssl
 
     testCompileOnly libraries.grpctesting

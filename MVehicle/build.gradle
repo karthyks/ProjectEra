@@ -11,18 +11,17 @@ repositories {
         url "https://maven-central.storage-download.googleapis.com/repos/central/data/"
     }
     mavenLocal()
-    jcenter()
 }
 
 dependencies {
-    compile project(':Network')
     compile project(':ServerHook')
+    compile project(':Network')
     compile libraries.alts
     compile libraries.netty
     compileOnly libraries.annotation
+
     compile libraries.ssl
-    compile libraries.mongoser
-    compile 'io.airlift:airline:0.7'
+
     testCompile libraries.grpctesting
     testCompile libraries.junit
     testCompile libraries.mockito

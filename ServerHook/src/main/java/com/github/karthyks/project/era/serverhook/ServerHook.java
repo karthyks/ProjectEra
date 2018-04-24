@@ -1,11 +1,15 @@
 package com.github.karthyks.project.era.serverhook;
 
 import com.github.karthyks.project.era.network.Constant;
-import com.github.karthyks.project.era.network.auth.JwtCreator;
+import com.github.karthyks.project.era.network.GrpcServer;
+import com.github.karthyks.project.era.proto.auth.AuthGrpc;
+import com.github.karthyks.project.era.proto.auth.AuthRequest;
+import com.github.karthyks.project.era.proto.auth.AuthResponse;
 import com.github.karthyks.project.era.proto.hook.HookGrpc;
 import com.github.karthyks.project.era.proto.hook.HookRequest;
 import com.github.karthyks.project.era.proto.hook.HookResponse;
 import com.github.karthyks.project.era.serverhook.auth.HookCredential;
+import com.github.karthyks.project.era.network.auth.AuthUtils;
 import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -24,7 +28,6 @@ public class ServerHook {
   private String name;
 
   private ManagedChannel mChannel;
-
   private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
   static final BlockingQueue<Runnable> hookQueue = new LinkedBlockingQueue<>();
 
@@ -34,10 +37,40 @@ public class ServerHook {
     this.name = name;
   }
 
+  public void authenticate() {
+    mChannel = ManagedChannelBuilder.forAddress(serverAddress, serverPort)
+        .usePlaintext()
+        .build();
+    AuthGrpc.AuthStub asyncStub = AuthGrpc.newStub(mChannel);
+    String password = AuthUtils.digest(Constant.JWT_SECRET);
+    asyncStub.authenticate(AuthRequest.newBuilder().setPassword(password).build(),
+        new StreamObserver<AuthResponse>() {
+          @Override
+          public void onNext(AuthResponse value) {
+            String token = value.getToken();
+            System.out.println("Authentication token " + token);
+            hook(token);
+          }
+
+          @Override
+          public void onError(Throwable t) {
+            System.out.println("Error Authentication " + t.getMessage());
+          }
+
+          @Override
+          public void onCompleted() {
+            System.out.println("Authentication Successful");
+          }
+        });
+  }
 
   public void hookToServer() {
-    String jwt = JwtCreator.create(Constant.ISSUER, name);
-    final HookCredential hookCredential = new HookCredential(jwt, name);
+    System.out.println("Opened port is : " + GrpcServer.PORT);
+    authenticate();
+  }
+
+  private void hook(String token) {
+    final HookCredential hookCredential = new HookCredential(token, name, GrpcServer.PORT);
     mChannel = ManagedChannelBuilder.forAddress(serverAddress, serverPort)
         .usePlaintext()
         .build();

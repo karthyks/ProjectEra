@@ -10,12 +10,14 @@ import io.grpc.Status;
 import java.util.concurrent.Executor;
 
 public class HookCredential implements CallCredentials {
-  private final String jwt;
+  private String token;
   private String name;
+  private int serverPort;
 
-  public HookCredential(String jwt, String name) {
-    this.jwt = jwt;
+  public HookCredential(String token, String name, int serverPort) {
+    this.token = token;
     this.name = name;
+    this.serverPort = serverPort;
   }
 
   @Override
@@ -26,8 +28,8 @@ public class HookCredential implements CallCredentials {
     appExecutor.execute(() -> {
       try {
         Metadata headers = new Metadata();
-        Metadata.Key<String> jwtKey = Metadata.Key.of("jwt", Metadata.ASCII_STRING_MARSHALLER);
-        headers.put(jwtKey, jwt);
+        headers.put(Constant.TOKEN_METADATA_KEY, token);
+        headers.put(Constant.SERVER_PORT_MD_KEY, "" + serverPort);
         headers.put(Constant.CLIENT_ID_MD_KEY, name);
         applier.apply(headers);
       } catch (Throwable e) {

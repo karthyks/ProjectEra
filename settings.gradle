@@ -1,8 +1,10 @@
-//include ':androidclient'
 rootProject.name = 'ProjectEra'
-include 'ServerPool'
-include 'SubServer'
-include 'Network'
-include 'VehicleModule'
 include 'ServerHook'
+include 'Network'
+
+include 'ServerPool'
+
+include 'SubServer'
+
+include 'MVehicle'
 

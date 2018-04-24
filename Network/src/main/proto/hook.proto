@@ -13,6 +13,7 @@ message HookRequest {
     string systemLoad = 3;
     string freeMemory = 4;
     string maxMemory = 5;
+    string totalMemory = 6;
 }
 
 message HookResponse {

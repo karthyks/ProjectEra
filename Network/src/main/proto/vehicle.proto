@@ -42,6 +42,14 @@ message TrackingResponse {
     repeated VehicleLocation vehicleLocations = 1;
 }
 
+message SaveLocationRequest {
+    repeated VehicleLocation vehicleLocations = 1;
+}
+
+message SaveLocationResponse {
+    string status = 1;
+}
+
 service FetchVehicleInfo{
     rpc getVehicleInfo(VehicleInfoRequest) returns(VehicleInfoResponse);
 }
@@ -49,4 +57,8 @@ service FetchVehicleInfo{
 service FetchVehicleLocation {
     rpc trackVehicle(stream TrackingRequest) returns(stream TrackingResponse);
     rpc getLocationHistory(TrackingRequest) returns(TrackingResponse);
+}
+
+service SaveVehicleLocation {
+    rpc saveVehicleLocation(stream SaveLocationRequest) returns(SaveLocationResponse);
 }

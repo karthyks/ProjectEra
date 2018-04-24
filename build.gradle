@@ -24,21 +24,25 @@ buildscript {
 ext {
     grpcVersion = '1.11.0' // CURRENT_GRPC_VERSION
     nettyTcNativeVersion = '2.0.7.Final'
+    MONGOREST_VERSION = '0.3.2-rc'
 }
 
 ext.libraries = [
-        proto      : 'com.google.api.grpc:proto-google-common-protos:1.0.0',
-        alts       : 'io.grpc:grpc-alts:' + grpcVersion,
-        netty      : 'io.grpc:grpc-netty:' + grpcVersion,
-        protobuf   : 'io.grpc:grpc-protobuf:' + grpcVersion,
-        stub       : 'io.grpc:grpc-stub:' + grpcVersion,
-        annotation : 'javax.annotation:javax.annotation-api:1.2',
-        jwt        : 'com.auth0:java-jwt:3.1.0',
+        proto        : 'com.google.api.grpc:proto-google-common-protos:1.0.0',
+        alts         : 'io.grpc:grpc-alts:' + grpcVersion,
+        netty        : 'io.grpc:grpc-netty:' + grpcVersion,
+        protobuf     : 'io.grpc:grpc-protobuf:' + grpcVersion,
+        stub         : 'io.grpc:grpc-stub:' + grpcVersion,
+        annotation   : 'javax.annotation:javax.annotation-api:1.2',
+        jwt          : 'com.auth0:java-jwt:3.1.0',
 
-        ssl        : 'io.netty:netty-tcnative-boringssl-static:' + nettyTcNativeVersion,
+        ssl          : 'io.netty:netty-tcnative-boringssl-static:' + nettyTcNativeVersion,
 
-        grpctesting: 'io.grpc:grpc-testing:' + grpcVersion,
-        junit      : 'junit:junit:4.12',
-        mockito    : 'org.mockito:mockito-core:1.9.5',
-        androidGradle: 'com.android.tools.build:gradle:2.3.0'
+        grpctesting  : 'io.grpc:grpc-testing:' + grpcVersion,
+        junit        : 'junit:junit:4.12',
+        mockito      : 'org.mockito:mockito-core:1.9.5',
+        androidGradle: 'com.android.tools.build:gradle:2.3.0',
+        mongodb      : 'org.mongodb:mongo-java-driver:3.6.3',
+        mongoser: 'in.mtap.iincube:mongorest:' + MONGOREST_VERSION
+
 ]

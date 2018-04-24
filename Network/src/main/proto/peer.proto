@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package peerproto;
+
+option java_multiple_files = true;
+option java_package = "com.github.karthyks.project.era.proto.peer";
+option java_outer_classname = "PeerProto";
+option objc_class_prefix = "PP";
+
+message PeerRequest {
+    string requester = 1;
+}
+
+message PeerResponse {
+    repeated PeerInfo peerInfos = 1;
+}
+
+message PeerInfo {
+    string name = 1;
+    string address = 2;
+    int32 port = 3;
+    int64 maxMemory = 4;
+    int64 totalMemory = 5;
+    int64 freeMemory = 6;
+    repeated double loadAverage = 7;
+}
+
+service PeerInfoService {
+    rpc getConnectedPeers(stream PeerRequest) returns(stream PeerResponse);
+}

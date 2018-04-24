@@ -23,6 +23,7 @@ public class HookRequestService implements Runnable {
         .setSystemLoad("" + execCmd("uptime"))
         .setFreeMemory("" + Runtime.getRuntime().freeMemory())
         .setMaxMemory("" + Runtime.getRuntime().maxMemory())
+        .setTotalMemory("" + Runtime.getRuntime().totalMemory())
         .setName(clientName).build();
     requestStreamObserver.onNext(hookRequest);
     if (ServerHook.hookQueue.size() > 0) {

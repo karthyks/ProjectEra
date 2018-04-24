@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package authproto;
+
+option java_multiple_files = true;
+option java_package = "com.github.karthyks.project.era.proto.auth";
+option java_outer_classname = "AuthProto";
+option objc_class_prefix = "AP";
+
+
+message AuthRequest {
+    string password = 1;
+}
+
+message AuthResponse {
+    string token = 1;
+}
+
+service Auth {
+    rpc authenticate(AuthRequest) returns(AuthResponse);
+}

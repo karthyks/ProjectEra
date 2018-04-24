@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class JwtCreator {
 
+  public static final long EXPIRES_AT = (48 * 60 * 60 * 1000);
+
   /**
    * SecureRandom random = new SecureRandom();
    * byte[] bytes = new byte[20];
@@ -33,5 +35,23 @@ public class JwtCreator {
         .withClaim("iat", new Date(iat))
         .withClaim("sub", subject)
         .withIssuer(issuer).sign(algorithm);
+  }
+
+  public static String create(String password) {
+    final long iat = System.currentTimeMillis();
+    final long exp = iat + (48 * 60 * 60 * 1000);
+    System.out.println("Expire at " + new Date(exp));
+
+    Algorithm algorithm = Algorithm.none();
+    try {
+      algorithm = Algorithm.HMAC256(password);
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    return JWT.create()
+        .withSubject("hook")
+        .withExpiresAt(new Date(exp))
+        .withIssuedAt(new Date(iat))
+        .withIssuer(Constant.ISSUER).sign(algorithm);
   }
 }

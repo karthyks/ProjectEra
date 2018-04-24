@@ -21,27 +21,36 @@ public class HookService extends HookGrpc.HookImplBase {
       @Override
       public void onNext(HookRequest value) {
         PeerInfo peerInfo = new PeerInfo();
-        peerInfo.address = Constant.REMOTE_ADDRESS.get();
+        peerInfo.traceAddress = Constant.REMOTE_ADDRESS.get();
+        peerInfo.tracePort = Constant.REMOTE_PORT.get();
+        peerInfo.serverAddress = Constant.REMOTE_SERVER_ADDRESS.get();
+        peerInfo.serverPort = Constant.REMOTE_SERVER_PORT.get();
         peerInfo.name = value.getName();
+        peerInfo.freeMemory = Long.parseLong(value.getFreeMemory());
+        peerInfo.maxMemory = Long.parseLong(value.getMaxMemory());
+        peerInfo.totalMemory = Long.parseLong(value.getTotalMemory());
+        String load = value.getSystemLoad();
+        load = load.split(":")[load.split(":").length - 1];
+        peerInfo.loadAverage = new double[]{Double.parseDouble(load.split(",")[0]),
+            Double.parseDouble(load.split(",")[1]),
+            Double.parseDouble(load.split(",")[2])};
         peersMap.put(peerInfo, responseObserver);
-        System.out.println("Received from " + peerInfo.name);
-        System.out.println("With Load " + value.getSystemLoad());
-        System.out.println("Free Memory " + value.getFreeMemory());
-        System.out.println("Max Memory " + value.getMaxMemory());
       }
 
       @Override
       public void onError(Throwable t) {
         PeerInfo peerInfo = new PeerInfo();
-        peerInfo.address = Constant.REMOTE_ADDRESS.get();
-        System.out.println("Hook disconnected from " + peerInfo.address);
+        peerInfo.traceAddress = Constant.REMOTE_ADDRESS.get();
+        peerInfo.tracePort = Constant.REMOTE_PORT.get();
+        System.out.println("Hook disconnected from " + peerInfo.traceAddress);
         peersMap.remove(peerInfo);
       }
 
       @Override
       public void onCompleted() {
         PeerInfo peerInfo = new PeerInfo();
-        peerInfo.address = Constant.REMOTE_ADDRESS.get();
+        peerInfo.traceAddress = Constant.REMOTE_ADDRESS.get();
+        peerInfo.tracePort = Constant.REMOTE_PORT.get();
         peersMap.remove(peerInfo);
         responseObserver.onCompleted();
       }
